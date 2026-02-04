@@ -84,6 +84,14 @@ jobs:
           name: Package
           path: backend/target/
 
+      # Prevent invalid tag if secret is empty
+      - name: Validate DockerHub username
+        run: |
+          if [ -z "${{ secrets.DOCKER_HUB_USERNAME }}" ]; then
+            echo "ERROR: DOCKER_HUB_USERNAME is not set!"
+            exit 1
+          fi
+
       - name: Docker build
         run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/devops-backend:latest -f backend/src/main/docker/Dockerfile.jvm ./backend
 
